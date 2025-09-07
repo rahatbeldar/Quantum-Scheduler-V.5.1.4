@@ -10,6 +10,29 @@
         .tab-button.active { border-color: #3b82f6; color: #3b82f6; }
         .loader { border-top-color: #3498db; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
+        
+        /* Resizable Log Window ke liye Styles */
+        #log-container {
+            position: relative;
+        }
+        #resize-handle {
+            width: 100%;
+            height: 10px;
+            background-color: #e5e7eb; /* bg-gray-200 */
+            cursor: ns-resize;
+            border-top: 1px solid #d1d5db; /* border-gray-300 */
+            border-bottom: 1px solid #d1d5db; /* border-gray-300 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #resize-handle::after {
+            content: '...';
+            color: #6b7280; /* text-gray-500 */
+            font-size: 1.2rem;
+            line-height: 0;
+            letter-spacing: 2px;
+        }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
@@ -35,10 +58,13 @@
                     </a>
                 </div>
             </div>
-            <!-- Log Display -->
+            <!-- Log Display (Updated with Resizer) -->
             <div class="mt-4">
                 <h3 class="font-semibold mb-2">Status / Logs:</h3>
-                <pre id="log-output" class="bg-gray-900 text-white text-sm rounded-lg p-4 h-48 overflow-y-auto">System taiyar hai...</pre>
+                <div id="log-container">
+                    <pre id="log-output" class="bg-gray-900 text-white text-sm rounded-t-lg p-4 h-48 overflow-y-auto" style="height: 192px;"></pre>
+                    <div id="resize-handle" title="Drag to resize"></div>
+                </div>
             </div>
         </div>
 
@@ -51,9 +77,7 @@
                 <button class="tab-button p-4 font-semibold border-b-2 border-transparent" data-table="rooms">Classrooms</button>
                 <button class="tab-button p-4 font-semibold border-b-2 border-transparent" data-table="labs">Labs</button>
             </div>
-
             <div class="py-4">
-                <!-- File Upload and Sample Download -->
                 <div class="bg-blue-50 p-4 rounded-lg flex flex-col md:flex-row items-center justify-between gap-4 mb-4">
                     <div>
                         <label for="csv-upload" class="font-semibold">Upload CSV for <span id="current-table-name" class="font-bold">Courses</span>:</label>
@@ -62,16 +86,10 @@
                     </div>
                      <a href="#" id="sample-download-link" class="text-blue-600 hover:underline text-sm font-semibold">Download Sample CSV</a>
                 </div>
-
-                <!-- Data Table -->
                 <div class="overflow-x-auto">
                     <table class="min-w-full bg-white">
-                        <thead id="data-table-head" class="bg-gray-200">
-                            <!-- JS se generate hoga -->
-                        </thead>
-                        <tbody id="data-table-body">
-                            <!-- JS se generate hoga -->
-                        </tbody>
+                        <thead id="data-table-head" class="bg-gray-200"></thead>
+                        <tbody id="data-table-body"></tbody>
                     </table>
                 </div>
             </div>
@@ -94,21 +112,25 @@
     const sampleDownloadLink = document.getElementById('sample-download-link');
     const downloadContainer = document.getElementById('download-link-container');
     const downloadLink = document.getElementById('download-link');
+    const resizeHandle = document.getElementById('resize-handle');
 
     // --- API Functions ---
     async function fetchData(tableName) {
         try {
             log(`'${tableName}' ka data fetch kiya ja raha hai...`);
-            const response = await fetch(`/api/data/${tableName}`);
-            if (!response.ok) throw new Error('Network response was not ok.');
-            const data = await response.json();
-            renderTable(data);
+            const response = await fetch(`${window.location.origin}/api/data/${tableName}`);
+            const result = await response.json();
+            if (!response.ok) {
+                 throw new Error(result.message || 'Network response was not ok.');
+            }
+            renderTable(result);
             log(`'${tableName}' ka data safaltapoorvak load hua.`);
         } catch (error) {
             console.error('Fetch error:', error);
-            log(`Error: ${tableName} ka data fetch nahi ho saka. Kya database initialize kiya hai?`);
+            const errorMessage = error.message || `Error: ${tableName} ka data fetch nahi ho saka.`;
+            log(errorMessage);
             tableHead.innerHTML = '';
-            tableBody.innerHTML = `<tr><td class="p-4 text-red-500">Data load nahi ho saka.</td></tr>`;
+            tableBody.innerHTML = `<tr><td class="p-4 text-red-500">${errorMessage}</td></tr>`;
         }
     }
 
@@ -116,11 +138,10 @@
     function renderTable(data) {
         tableHead.innerHTML = '';
         tableBody.innerHTML = '';
-        if (data.length === 0) {
+        if (!data || data.length === 0) {
             tableBody.innerHTML = `<tr><td class="p-4 text-center text-gray-500" colspan="100%">Koi data nahi mila. Kripya CSV upload karein.</td></tr>`;
             return;
         }
-        
         const headers = Object.keys(data[0]);
         const headerRow = document.createElement('tr');
         headers.forEach(header => {
@@ -130,7 +151,6 @@
             headerRow.appendChild(th);
         });
         tableHead.appendChild(headerRow);
-
         data.forEach(rowData => {
             const row = document.createElement('tr');
             row.className = 'border-b hover:bg-gray-50';
@@ -145,8 +165,11 @@
     }
     
     function log(message) {
+        if (typeof message === 'object') {
+            message = JSON.stringify(message, null, 2);
+        }
         logOutput.textContent += `\n> ${message}`;
-        logOutput.scrollTop = logOutput.scrollHeight; // Auto-scroll
+        logOutput.scrollTop = logOutput.scrollHeight;
     }
 
     // --- Event Handlers ---
@@ -166,20 +189,15 @@
         generateBtn.disabled = true;
         generateBtn.innerHTML = '<div class="loader w-5 h-5 border-4 rounded-full"></div> Please wait...';
         downloadContainer.classList.add('hidden');
-
         try {
-            const response = await fetch('/api/generate', { method: 'POST' });
+            const response = await fetch('/generate', { method: 'POST' });
             const result = await response.json();
-
-            if (response.ok) {
-                log('SERVER LOGS:\n' + result.log);
-                log(result.message);
-                downloadLink.href = `/download/${result.output_file}`;
+            log('SERVER LOGS:\n' + (result.logs || 'No logs received.'));
+            log(result.message);
+            if (result.success) {
+                const timestamp = new Date().getTime();
+                downloadLink.href = `/download/${result.output_file}?v=${timestamp}`;
                 downloadContainer.classList.remove('hidden');
-            } else {
-                log('--- ERROR ---');
-                log('SERVER LOGS:\n' + result.log);
-                log(`Error: ${result.error}`);
             }
         } catch (error) {
             log('Fatal error: Server se communicate nahi ho saka.');
@@ -198,24 +216,56 @@
         const file = csvInput.files[0];
         const formData = new FormData();
         formData.append('file', file);
-        formData.append('table_name', currentTable);
-
-        log(`'${file.name}' upload ho raha hai...`);
+        log(`'${file.name}' ko '${currentTable}' table mein upload kiya ja raha hai...`);
         try {
-            const response = await fetch('/api/upload', { method: 'POST', body: formData });
+            const response = await fetch(`/api/upload/${currentTable}`, { method: 'POST', body: formData });
             const result = await response.json();
-            if (response.ok) {
-                log(result.message);
-                fetchData(currentTable); // Refresh table data
-            } else {
-                log(`Upload Error: ${result.error}`);
+            log(result.message);
+            if (result.success) {
+                fetchData(currentTable);
             }
         } catch (error) {
             log('Fatal upload error: Server se communicate nahi ho saka.');
         } finally {
-            csvInput.value = ''; // Reset file input
+            csvInput.value = '';
         }
     });
+
+    // --- UPGRADED: Resizing Logic for Log Window (Bug-Free) ---
+    let isResizing = false;
+
+    const handleMouseMove = (e) => {
+        if (!isResizing) return;
+        const containerTop = logOutput.getBoundingClientRect().top;
+        const newHeight = e.clientY - containerTop;
+
+        // Min aur Max height set karein
+        const minHeight = 100;
+        const maxHeight = window.innerHeight * 0.7; // Screen ki 70% se zyada nahi
+
+        if (newHeight >= minHeight && newHeight <= maxHeight) {
+            logOutput.style.height = `${newHeight}px`;
+        }
+    };
+
+    const stopResizing = () => {
+        isResizing = false;
+        // Listeners ko window se hatayein taaki cursor "chipak" na jaye
+        window.removeEventListener('mousemove', handleMouseMove);
+        window.removeEventListener('mouseup', stopResizing);
+        // Resizing ke dauran text selection ko dobara chalu karein
+        document.body.style.userSelect = 'auto';
+    };
+
+    resizeHandle.addEventListener('mousedown', (e) => {
+        isResizing = true;
+        // Listeners ko 'document' ke bajaye 'window' par jodein, taaki mouse bahar jaane par bhi kaam kare
+        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('mouseup', stopResizing);
+        // Resizing ke dauran text selection ko rokein taaki experience behtar ho
+        document.body.style.userSelect = 'none';
+    });
+
 
     // --- Initial Load ---
     document.addEventListener('DOMContentLoaded', () => {
@@ -226,3 +276,4 @@
 
 </body>
 </html>
+

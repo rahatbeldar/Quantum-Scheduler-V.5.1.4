@@ -1,11 +1,17 @@
 faculty_id,faculty_name,subjects
-F01,Dr. Sharma,"CS101,CS201,CS301"
-F02,Prof. Gupta,"MA101"
-F03,Dr. Verma,"PHY101"
-F04,Prof. Singh,"DB201"
-F05,Prof. Khan,"CS-ELEC-1A,CS-ELEC-1B"
-F06,Dr. Patel,"ME101"
-F07,Prof. Reddy,"MTX201"
-F08,Dr. Iyer,"EE201"
-F09,Prof. Kumar,"CN301"
-
+BSR,Dr.B.S.Rathod,EG
+HKK,Ms.Harpreet  Khurana,"IM,WT,OOAD"
+BP,Ms.Bhairavi Pawar,"PL,OSA,OS"
+PK& AS,Dr. Pradnya Kamble,BEDE
+UD,Usha Dhone,DM
+DSJ,Dr.Sunil Joshi,"ITE,AIML"
+RD,Dr.Rina Dongre,"OB,C & PD,EN"
+AK,Amruta Kapare,"OS,FSA,W&C.S,PM"
+SJ,Ms.Sakshi Jamgaonkar,JAVA
+SLJ,Sulakshna Joshi,FL
+AG,Ms.Aishwarya Ghalsasi,GL
+GG,Ganesh Gaikwad,JAVA
+AH,Mr.Ajinkya Hankare,CC
+VK,Dr.Vaibhav Khatavkar,DC
+LN,Lomesh Narkhede,"CS,CLA"
+NK,Nikhil Kumat,NLP

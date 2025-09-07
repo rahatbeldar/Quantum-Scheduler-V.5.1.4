@@ -1,7 +1,10 @@
-room_id,capacity
-R101,60
-R102,60
-R103,60
-R104,70
-R105,70
-
+room_id,capacity,course_id
+R1,40,FY-CT/IT-A
+R2,40,FY-CT/IT-B
+R3,40,SY-CT-A
+R4,40,SY-IT
+R5,40,SY-CT-B
+R6,40,TY-CT
+R7,40,TY-IT
+R9,40,
+R9,40,
