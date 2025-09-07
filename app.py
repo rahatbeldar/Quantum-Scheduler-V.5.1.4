@@ -145,6 +145,7 @@ def download(filename):
     else:
         from flask import abort
         abort(404)
+        
 # local host keliye hai
 # if __name__ == '__main__':
 #     app.run(debug=True)
@@ -152,9 +153,15 @@ def download(filename):
 
 #deploy ke lye hai railway
 
-if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 8080))  # Railway ka PORT le, warna default 8080
-    app.run(host="0.0.0.0", port=port, debug=False)
+import os
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
+
+
+
+# if __name__ == '__main__':
+#     port = int(os.environ.get("PORT", 8080))  # Railway ka PORT le, warna default 8080
+#     app.run(host="0.0.0.0", port=port, debug=False)
 
 
 
