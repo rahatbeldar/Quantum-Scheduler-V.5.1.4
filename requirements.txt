@@ -1,5 +1,4 @@
-gunicorn
-requests
+
 
 #   Flask Web Framework
 Flask
@@ -15,3 +14,6 @@ openpyxl
 
 #   Asynchronous HTTP Client (for Gemini API calls, optional for web version)
 aiohttp
+
+gunicorn
+requests
