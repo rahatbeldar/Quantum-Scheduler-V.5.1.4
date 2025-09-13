@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timetable Settings</title>
+  <style>
+    /* General Styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f9;
+      color: #333;
+    }
+
+    h1, h3 {
+      color: #0056b3;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin: 10px 0 5px;
+    }
+
+    input[type="checkbox"], input[type="radio"] {
+      margin-right: 10px;
+    }
+
+    input[type="number"], input[type="time"], input[type="text"] {
+      padding: 8px;
+      margin: 5px 0;
+      width: 100%;
+      max-width: 300px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      background-color: #0056b3;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #003f7f;
+    }
+
+    .section {
+      margin-bottom: 30px;
+    }
+
+    .dynamic-container div {
+      margin-bottom: 10px;
+    }
+
+    .dynamic-container input {
+      display: inline-block;
+      width: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Timetable Settings</h1>
+
+    <!-- College Timings Section -->
+    <div class="section">
+      <h3>College Timings aur Working Days</h3>
+      
+      <!-- Working Days -->
+      <label>Working Days:</label>
+      <input type="checkbox" id="monday" name="working_days" value="Monday" checked> Monday<br>
+      <input type="checkbox" id="tuesday" name="working_days" value="Tuesday" checked> Tuesday<br>
+      <input type="checkbox" id="wednesday" name="working_days" value="Wednesday" checked> Wednesday<br>
+      <input type="checkbox" id="thursday" name="working_days" value="Thursday" checked> Thursday<br>
+      <input type="checkbox" id="friday" name="working_days" value="Friday" checked> Friday<br>
+      <input type="checkbox" id="saturday" name="working_days" value="Saturday"> Saturday<br>
+
+      <!-- Saturday Mode -->
+      <label>Saturday Mode:</label>
+      <input type="radio" name="saturday_mode" value="Full Day" checked> Full Day<br>
+      <input type="radio" name="saturday_mode" value="Half Day"> Half Day<br>
+      <input type="radio" name="saturday_mode" value="Off"> Off<br>
+
+      <!-- Daily Slots -->
+      <label>Daily Slots / Timings:</label>
+      <div id="slot-container" class="dynamic-container">
+        <div>
+          Slot 1: <input type="time" name="slot_start_1" value="09:00"> - <input type="time" name="slot_end_1" value="10:00">
+        </div>
+      </div>
+      <button type="button" onclick="addSlot()">[Add New Slot]</button>
+
+      <!-- Breaks -->
+      <label>Breaks:</label>
+      <div id="break-container" class="dynamic-container">
+        <div>
+          After Slot: <input type="number" name="break_after_slot" min="1" value="2">
+          Break Name: <input type="text" name="break_name" value="Tea Break">
+          Time: <input type="time" name="break_start" value="11:00"> - <input type="time" name="break_end" value="11:15">
+        </div>
+      </div>
+      <button type="button" onclick="addBreak()">[Add New Break]</button>
+    </div>
+
+    <!-- Faculty and Course Rules Section -->
+    <div class="section">
+      <h3>Faculty aur Course ke Rules (Workload)</h3>
+      
+      <label>Max Classes Per Day (Faculty):</label>
+      <input type="number" name="max_classes_per_day_faculty" value="5"><br>
+
+      <label>Max Classes Per Week (Faculty):</label>
+      <input type="number" name="max_classes_per_week_faculty" value="25"><br>
+
+      <label>Max Lab Hours Per Day (Students):</label>
+      <input type="number" name="max_lab_hours_per_day_course" value="3"><br>
+
+      <label>Max Daily Lectures Per Subject:</label>
+      <input type="number" name="max_daily_lectures_per_subject" value="1"><br>
+    </div>
+
+    <!-- Timetable Generation Options Section -->
+    <div class="section">
+      <h3>Timetable Generation ke Options</h3>
+      
+      <label>Schedule Mode:</label>
+      <input type="radio" name="schedule_mode" value="Compact" checked> Compact (No Gaps)<br>
+      <input type="radio" name="schedule_mode" value="Flexible"> Flexible (Minimize Gaps)<br>
+
+      <label>Solver Time Limit (in seconds):</label>
+      <input type="number" name="solver_time_limit" value="240"><br>
+    </div>
+  </div>
+
+  <script>
+    // Add New Slot
+    function addSlot() {
+      const slotContainer = document.getElementById('slot-container');
+      const slotCount = slotContainer.children.length + 1;
+      const newSlot = document.createElement('div');
+      newSlot.innerHTML = `Slot ${slotCount}: <input type="time" name="slot_start_${slotCount}"> - <input type="time" name="slot_end_${slotCount}">`;
+      slotContainer.appendChild(newSlot);
+    }
+
+    // Add New Break
+    function addBreak() {
+      const breakContainer = document.getElementById('break-container');
+      const newBreak = document.createElement('div');
+      newBreak.innerHTML = `After Slot: <input type="number" name="break_after_slot" min="1">
+                            Break Name: <input type="text" name="break_name">
+                            Time: <input type="time" name="break_start"> - <input type="time" name="break_end">`;
+      breakContainer.appendChild(newBreak);
+    }
+  </script>
+</body>
+</html>

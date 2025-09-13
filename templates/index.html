@@ -15,16 +15,166 @@
         #thinking-text { display: inline-block; overflow: hidden; white-space: nowrap; border-right: .10em solid #4f46e5; animation: typing 2s steps(40, end), blink-caret .75s step-end infinite; }
         @keyframes typing { from { width: 0 } to { width: 100% } }
         @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: #4f46e5; } }
-    </style>
+         /* --- PASTE SETTINGS CSS HERE --- */
+        .settings-btn { position: fixed; top: 20px; right: 20px; z-index: 100; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); justify-content: center; align-items: center; }
+        .modal-content { background-color: #fefefe; margin: auto; padding: 20px; border: 1px solid #888; width: 90%; max-width: 800px; border-radius: 10px; position: relative; max-height: 90vh; overflow-y: auto; }
+        .close-btn { color: #aaa; position: absolute; top: 10px; right: 25px; font-size: 35px; font-weight: bold; cursor: pointer; }
+        .close-btn:hover, .close-btn:focus { color: black; }
+        /* --- END OF SETTINGS CSS --- */
+
+   </style>
      <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
 </head>
 <body class="bg-gray-50 text-gray-800">
 
+    <button onclick="openSettings()" class="settings-btn bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-all shadow-lg">
+        Settings
+    </button>
+
+    <!-- === REPLACE THIS ENTIRE MODAL DIV === -->
+    <div id="settings-modal" class="modal">
+        <div class="modal-content bg-white rounded-lg shadow-xl p-6 md:p-8">
+            <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+                <h1 class="text-2xl font-bold text-gray-800">Timetable Settings</h1>
+                <span class="close-btn" onclick="closeSettings()">&times;</span>
+            </div>
+            
+            <form id="settings-form">
+                <!-- College Timings Section -->
+                <div class="mb-8">
+                  <h3 class="text-lg font-semibold text-indigo-600 mb-4">College Timings & Working Days</h3>
+                  
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Working Days:</label>
+                  <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                      <div class="flex items-center">
+                    <input type="checkbox" name="working_days" value="Monday" checked
+                      class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 transition-colors duration-200">
+                    <label class="ml-3 text-sm text-gray-600">Monday</label>
+                  </div>
+                  <div class="flex items-center">
+                    <input type="checkbox" name="working_days" value="Tuesday" checked
+                      class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 transition-colors duration-200">
+                    <label class="ml-3 text-sm text-gray-600">Tuesday</label>
+                  </div>
+                  <div class="flex items-center">
+                    <input type="checkbox" name="working_days" value="Wednesday" checked
+                      class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 transition-colors duration-200">
+                    <label class="ml-3 text-sm text-gray-600">Wednesday</label>
+                  </div>
+                  <div class="flex items-center">
+                    <input type="checkbox" name="working_days" value="Thursday" checked
+                      class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 transition-colors duration-200">
+                    <label class="ml-3 text-sm text-gray-600">Thursday</label>
+                  </div>
+                  <div class="flex items-center">
+                    <input type="checkbox" name="working_days" value="Friday" checked
+                      class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 transition-colors duration-200">
+                    <label class="ml-3 text-sm text-gray-600">Friday</label>
+                  </div>
+                  <div class="flex items-center">
+                    <input type="checkbox" name="working_days" value="Saturday"
+                      class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 transition-colors duration-200">
+                    <label class="ml-3 text-sm text-gray-600">Saturday</label>
+                  </div>
+              </div>
+
+              <label class="block text-sm font-medium text-gray-700 mt-6 mb-2">Saturday Mode:</label>
+              <div class="flex items-center space-x-6">
+                  <div class="flex items-center">
+                    <input type="radio" name="saturday_mode" value="Full Day"
+                      class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 transition-colors duration-200">
+                    <label class="ml-3 text-sm text-gray-600">Full Day</label>
+                  </div>
+                  <div class="flex items-center">
+                    <input type="radio" name="saturday_mode" value="Half Day"
+                      class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 transition-colors duration-200">
+                    <label class="ml-3 text-sm text-gray-600">Half Day</label>
+                  </div>
+                  <div class="flex items-center">
+                    <input type="radio" name="saturday_mode" value="Off" checked
+                      class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 transition-colors duration-200">
+                    <label class="ml-3 text-sm text-gray-600">Off</label>
+                  </div>
+              </div>
+
+              <label class="block text-sm font-medium text-gray-700 mt-6 mb-2">Daily Slots / Timings:</label>
+              <div id="slot-container" class="space-y-2">
+                <div class="flex items-center space-x-2">
+                    <span class="text-sm text-gray-600 w-16">Slot 1:</span>
+                    <input type="time" name="slot_start_1" value="09:00"
+                      class="block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 focus:outline-none transition-colors duration-200">
+                    <span class="font-bold">-</span>
+                    <input type="time" name="slot_end_1" value="10:00"
+                      class="block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 focus:outline-none transition-colors duration-200">
+                </div>
+              </div>
+              <button type="button" onclick="addSlot()" class="mt-2 text-sm font-semibold text-indigo-600 hover:text-indigo-800">[+ Add New Slot]</button>
+
+              <label class="block text-sm font-medium text-gray-700 mt-6 mb-2">Breaks:</label>
+              <div id="break-container" class="space-y-2">
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-2 items-center">
+                    <input type="number" name="break_after_slot" min="1" value="4" placeholder="After Slot #"
+                      class="block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 focus:outline-none transition-colors duration-200">
+                    <input type="text" name="break_name" value="Lunch Break" placeholder="Break Name"
+                      class="md:col-span-2 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 focus:outline-none transition-colors duration-200">
+                    <input type="time" name="break_start" value="13:00"
+                      class="block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 focus:outline-none transition-colors duration-200">
+                    <input type="time" name="break_end" value="14:00"
+                      class="block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 focus:outline-none transition-colors duration-200">
+                </div>
+              </div>
+              <button type="button" onclick="addBreak()" class="mt-2 text-sm font-semibold text-indigo-600 hover:text-indigo-800">[+ Add New Break]</button>
+            </div>
+
+            <!-- Workload Rules Section -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-indigo-600 mb-4">Faculty & Course Rules</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Max Classes/Day (Faculty)</label>
+                        <input type="number" name="max_classes_per_day_faculty" value="5"
+                          class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 focus:outline-none transition-colors duration-200">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Max Classes/Week (Faculty)</label>
+                        <input type="number" name="max_classes_per_week_faculty" value="25"
+                          class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 focus:outline-none transition-colors duration-200">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Max Lab Hours/Day (Students)</label>
+                        <input type="number" name="max_lab_hours_per_day_course" value="3"
+                          class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 focus:outline-none transition-colors duration-200">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Max Daily Lectures/Subject</label>
+                        <input type="number" name="max_daily_lectures_per_subject" value="1"
+                          class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 focus:outline-none transition-colors duration-200">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    </div>
+    <!-- === END OF REPLACEMENT === -->
+
     <div class="container mx-auto p-4 md:p-8">
-        <header class="text-center mb-10 flex flex-col items-center">
-            <img src="/static/QuantumSchedule.png" alt="Quantum Scheduler Logo" class="h-20 w-20 mb-4 rounded-full shadow-md">
-            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900">Quantum Scheduler</h1>
-            <p class="text-gray-600 mt-2 text-lg">Unlocking scheduling possibilities through the power of AI.</p>
+        <!-- Header Section -->
+         <header class="flex items-center justify-center md:justify-start mb-10 space-x-4">
+        <!-- Logo Left -->
+        <img src="/static/QuantumSchedule.png" alt="Quantum Scheduler Logo" 
+             class="h-16 md:h-20 w-auto rounded-lg shadow-sm">
+
+        <!-- Brand + Tagline -->
+        <div>
+            <h1 class="text-3xl md:text-3xl font-extrabold text-gray-900">
+                AI-Powered Timetable Generator
+            </h1>
+            <p class="text-gray-600 mt-2 text-lg">
+                Smart, automated & flexible schedules for modern education.
+            </p>
+        </div>
+        
         </header>
 
         <!-- Main Control Panel -->
@@ -32,7 +182,7 @@
             <h2 class="text-2xl font-bold mb-4 border-b pb-3 text-gray-800">Control Panel</h2>
             
             <div class="bg-indigo-50 border border-indigo-200 p-4 rounded-lg mb-6">
-                <h3 class="font-semibold text-gray-800 mb-2">1. Scheduling Mode Chunein</h3>
+                <h3 class="font-semibold text-gray-800 mb-2">1. Scheduling Mode </h3>
                 <div class="flex items-center gap-x-6 gap-y-2 flex-wrap">
                     <div class="flex items-center">
                         <input type="radio" id="mode-compact" name="schedule_mode" value="compact" class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500" checked>
@@ -310,6 +460,44 @@
         sampleDownloadLink.href = `/download/sample_${currentTable}.csv`;
         log("App Ready. Please upload all data files.", 'success');
     });
+
+    /* === REPLACE THIS ENTIRE JAVASCRIPT BLOCK === */
+    function openSettings() {
+        document.getElementById('settings-modal').style.display = 'flex';
+    }
+
+    function closeSettings() {
+        document.getElementById('settings-modal').style.display = 'none';
+    }
+
+    window.onclick = function(event) {
+        const modal = document.getElementById('settings-modal');
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    function addSlot() {
+      const slotContainer = document.getElementById('slot-container');
+      const slotCount = slotContainer.children.length + 1;
+      const newSlot = document.createElement('div');
+      newSlot.className = 'flex items-center space-x-2';
+      newSlot.innerHTML = `<span>Slot ${slotCount}:</span> <input type="time" name="slot_start_${slotCount}" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"> <span>-</span> <input type="time" name="slot_end_${slotCount}" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">`;
+      slotContainer.appendChild(newSlot);
+    }
+
+    function addBreak() {
+      const breakContainer = document.getElementById('break-container');
+      const newBreak = document.createElement('div');
+      newBreak.className = 'grid grid-cols-1 md:grid-cols-4 gap-2 items-center';
+      newBreak.innerHTML = `<input type="number" name="break_after_slot" min="1" placeholder="After Slot #" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            <input type="text" name="break_name" placeholder="Break Name" class="md:col-span-1 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            <input type="time" name="break_start" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            <input type="time" name="break_end" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">`;
+      breakContainer.appendChild(newBreak);
+    }
+    /* === END OF REPLACEMENT === */
+
 </script>
 
 </body>
